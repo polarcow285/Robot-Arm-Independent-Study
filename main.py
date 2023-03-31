@@ -2,9 +2,9 @@ link1CurrPos = 0
 link2CurrPos = 180
 link3CurrPos = 0
 #in centimeters
-link1 = 19.05
+link1 = 19
 link2 = 10.5
-link3 = 13.3
+link3 = 13
 
 hummingbird.start_hummingbird()
 hummingbird.set_position_servo(FourPort.ONE, 0)
@@ -18,7 +18,7 @@ def on_forever():
     moveTo(90, 0, 90)
     basic.pause(1000)
 #basic.forever(on_forever)
-inv_solve(23.8, 0, 19.05)
+inv_solve(23.5, 0, 19)
 
 def moveTo(target1, target2, target3):
     target2 = 180-target2
@@ -50,6 +50,7 @@ def inv_solve(x, y, z):
     theta3_1 = Math.acos((y**2 + x**2 + s**2 - link2**2 - link3**2)/(2 * link2 * link3))
     theta3_2 = -theta3_1
 
+    
     theta2_1 = Math.atan2(s,AP) - Math.atan((link3 * Math.sin(theta3_1))/(link2 + link3 * Math.cos(theta3_1)))
     theta2_2 = Math.atan2(s,AP) - Math.atan((link3 * Math.sin(theta3_2))/(link2 + link3 * Math.cos(theta3_2)))
     theta2_3 = Math.atan2(s,-AP) - Math.atan((link3 * Math.sin(theta3_1))/(link2 + link3 * Math.cos(theta3_1)))
@@ -64,22 +65,23 @@ def inv_solve(x, y, z):
 
     theta3_1 = theta3_1 * (180/Math.PI)
     theta3_2 = theta3_2 * (180/Math.PI)
-
+    
     theta2_1 = theta2_1 * (180/Math.PI)
     theta2_2 = theta2_2 * (180/Math.PI)
     theta2_3 = theta2_3 * (180/Math.PI)
     theta2_4 = theta2_4 * (180/Math.PI)
-
+    
     theta1_1 = Math.round(theta1_1)
     theta1_2 = Math.round(theta1_2)
-
+    
     theta2_1 = Math.round(theta2_1)
     theta2_2 = Math.round(theta2_2)
     theta2_3 = Math.round(theta2_3)
     theta2_4 = Math.round(theta2_4)
-
+    
     theta3_1 = Math.round(theta3_1)
     theta3_2 = Math.round(theta3_2)
+    
     set1 = (theta1_1, theta2_1, theta3_1)
     set2 = (theta1_1, theta2_2, theta3_2)
     set3 = (theta1_2, theta2_3, theta3_1)

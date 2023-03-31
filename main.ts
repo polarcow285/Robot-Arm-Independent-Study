@@ -2,9 +2,9 @@ let link1CurrPos = 0
 let link2CurrPos = 180
 let link3CurrPos = 0
 // in centimeters
-let link1 = 19.05
+let link1 = 19
 let link2 = 10.5
-let link3 = 13.3
+let link3 = 13
 hummingbird.startHummingbird()
 hummingbird.setPositionServo(FourPort.One, 0)
 hummingbird.setPositionServo(FourPort.Two, 180)
@@ -17,7 +17,7 @@ function on_forever() {
 }
 
 // basic.forever(on_forever)
-inv_solve(23.8, 0, 19.05)
+inv_solve(23.5, 0, 19)
 function moveTo(target1: number, target2: number, target3: number) {
     target2 = 180 - target2
     
