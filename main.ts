@@ -17,7 +17,9 @@ function on_forever() {
 }
 
 // basic.forever(on_forever)
-inv_solve(23.5, 0, 19)
+// thetas = inv_solve(23.5, 0, 19)
+let thetas = inv_solve(21.5, 0, 19)
+// moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
 function moveTo(target1: number, target2: number, target3: number) {
     target2 = 180 - target2
     
@@ -49,7 +51,8 @@ function moveTo(target1: number, target2: number, target3: number) {
     }
 }
 
-function inv_solve(x: number, y: number, z: number) {
+function inv_solve(x: number, y: number, z: number): any[] {
+    let isValid: boolean;
     let AP = Math.sqrt(x ** 2 + y ** 2)
     let s = z - link1
     let theta3_1 = Math.acos((y ** 2 + x ** 2 + s ** 2 - link2 ** 2 - link3 ** 2) / (2 * link2 * link3))
@@ -83,20 +86,32 @@ function inv_solve(x: number, y: number, z: number) {
     let set4 = [theta1_2, theta2_4, theta3_2]
     let p = [set1, set2, set3, set4]
     let res = []
-    let isValid = true
-    for (let _set of p) {
-        serial.writeValue("theta1", _set[0])
-        serial.writeValue("theta2", _set[1])
-        serial.writeValue("theta3", _set[2])
-    }
     /** 
     for _set in p:
-        for theta in _set:
-            if(theta > 180 or theta < 0):
-                isValid = False;
-                break
-        if(isValid = True):
+        serial.write_value("theta1", _set[0])
+        serial.write_value("theta2", _set[1])
+        serial.write_value("theta3", _set[2])
     
  */
+    for (let _set of p) {
+        isValid = true
+        for (let theta of _set) {
+            if (theta > 180 || theta < 0) {
+                isValid = false
+                break
+            }
+            
+        }
+        if (isValid == true) {
+            res.push(_set)
+        }
+        
+    }
+    for (let _s of res) {
+        serial.writeValue("theta1", _s[0])
+        serial.writeValue("theta2", _s[1])
+        serial.writeValue("theta3", _s[2])
+    }
+    return res
 }
 

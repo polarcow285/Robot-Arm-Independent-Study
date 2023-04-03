@@ -18,7 +18,9 @@ def on_forever():
     moveTo(90, 0, 90)
     basic.pause(1000)
 #basic.forever(on_forever)
-inv_solve(23.5, 0, 19)
+#thetas = inv_solve(23.5, 0, 19)
+thetas = inv_solve(21.5, 0, 19)
+#moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
 
 def moveTo(target1, target2, target3):
     target2 = 180-target2
@@ -89,17 +91,27 @@ def inv_solve(x, y, z):
     
     p = [set1, set2, set3, set4]
     res = []
-    isValid = True;
+    
+    """
     for _set in p:
         serial.write_value("theta1", _set[0])
         serial.write_value("theta2", _set[1])
         serial.write_value("theta3", _set[2])
     """
-    for _set in p:
-        for theta in _set:
-            if(theta > 180 or theta < 0):
+    
+    for _set in p:       
+        isValid = True;
+        for theta in _set:          
+            if(theta > 180 or theta < 0):           
                 isValid = False;
                 break
-        if(isValid = True):
-    """
+        if(isValid == True):
+            res.append(_set)
+    
+    for _s in res:
+        serial.write_value("theta1", _s[0])
+        serial.write_value("theta2", _s[1])
+        serial.write_value("theta3", _s[2])
+    
+    return res;
     
