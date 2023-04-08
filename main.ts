@@ -19,8 +19,16 @@ function on_forever() {
 // basic.forever(on_forever)
 // thetas = inv_solve(23.5, 0, 19)
 // thetas = inv_solve(21.5, 0, 19)
-moveToPos(15, 0, 12)
-serial.writeLine("done")
+let can = []
+// x max: 23.5
+// y max: 23.5
+// z max: 19
+can = moveToPos(15, 15, 17)
+// can = moveToPos(23.5, 0, 19)
+for (let cand of can) {
+    serial.writeNumbers(cand)
+}
+// serial.write_line("done")
 // thetas = inv_solve(15, 0, 12)
 // moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
 function moveTo(target1: number, target2: number, target3: number) {
@@ -54,24 +62,43 @@ function moveTo(target1: number, target2: number, target3: number) {
     }
 }
 
-function moveToPos(x: number, y: number, z: number) {
-    let thetas = inv_solve(x, y, z)
-    let tolerance = 12
+function moveToPos(x: number, y: number, z: number): any[] {
+    let thetas: any[];
+    let candidate_points = []
+    let result = inv_solve(x, y, z)
+    let tolerance = 10
     // serial.write_value(len)
-    if (thetas.length == 0) {
-        serial.writeLine("inside while loop")
-        for (let a = 0; a < tolerance + 1; a++) {
-            for (let b = 0; b < tolerance + 1; b++) {
-                for (let c = 0; c < tolerance + 1; c++) {
-                    serial.writeLine("doing inv_solve")
+    if (result.length == 0) {
+        serial.writeLine("need to find candidate points")
+        for (let a = 0; a < tolerance; a++) {
+            for (let b = 0; b < tolerance; b++) {
+                for (let c = 0; c < tolerance; c++) {
+                    serial.writeLine("doing inv_solve for candidates")
                     thetas = inv_solve(x + a, y + b, z + c)
+                    if (thetas.length != 0) {
+                        serial.writeLine("found a candidate point!")
+                        for (let t of thetas) {
+                            candidate_points.push([x + a, y + b, z + c])
+                        }
+                    }
+                    
                     thetas = inv_solve(x - a, y - b, z - c)
+                    if (thetas.length != 0) {
+                        serial.writeLine("found a candidate point!")
+                        for (let n of thetas) {
+                            candidate_points.push([x - a, y - b, z - c])
+                        }
+                    }
+                    
                 }
             }
         }
+        return candidate_points
+    } else {
+        serial.writeLine("no need to find candidate points")
+        return result
     }
     
-    return thetas[0]
 }
 
 function inv_solve(x: number, y: number, z: number): any[] {
@@ -138,11 +165,7 @@ function inv_solve(x: number, y: number, z: number): any[] {
     if (res.length == 0) {
         serial.writeLine("no values work :(")
     } else {
-        for (let _s of res) {
-            serial.writeValue("theta1", _s[0])
-            serial.writeValue("theta2", _s[1])
-            serial.writeValue("theta3", _s[2])
-        }
+        serial.writeLine("there is a possible configuration!")
     }
     
     return res
@@ -150,7 +173,7 @@ function inv_solve(x: number, y: number, z: number): any[] {
 
 function convertToDegrees(theta: number): number {
     // checking for nan, nan is not equal to itself
-    if (theta != theta) {
+    if (theta == theta) {
         return Math.round(theta * (180 / Math.PI))
     } else {
         // print("Error: cannot perform operation with NaN value.")

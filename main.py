@@ -1,3 +1,4 @@
+
 link1CurrPos = 0
 link2CurrPos = 180
 link3CurrPos = 0
@@ -20,8 +21,17 @@ def on_forever():
 #basic.forever(on_forever)
 #thetas = inv_solve(23.5, 0, 19)
 #thetas = inv_solve(21.5, 0, 19)
-moveToPos(15, 0 , 12)
-serial.write_line("done")
+can = []
+#x max: 23.5
+#y max: 23.5
+#z max: 19
+can = moveToPos(15, 15, 17)
+#can = moveToPos(23.5, 0, 19)
+for cand in can:
+    serial.write_numbers(cand)
+
+
+#serial.write_line("done")
 #thetas = inv_solve(15, 0, 12)
 #moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
 
@@ -48,18 +58,31 @@ def moveTo(target1, target2, target3):
         hummingbird.set_position_servo(FourPort.THREE, link3CurrPos)
         basic.pause(10)
 def moveToPos(x, y, z):
-    thetas = inv_solve(x,y,z)
-    tolerance = 12
+    candidate_points = []
+    result = inv_solve(x,y,z)
+    tolerance = 10
     #serial.write_value(len)
-    if(len(thetas)==0):
-        serial.write_line("inside while loop")
-        for a in range(tolerance+1):
-            for b in range(tolerance+1):
-                for c in range(tolerance+1):
-                    serial.write_line("doing inv_solve")
+    if(len(result)==0):
+        serial.write_line("need to find candidate points")
+        for a in range(tolerance):
+            for b in range(tolerance):
+                for c in range(tolerance):
+                    serial.write_line("doing inv_solve for candidates")
                     thetas = inv_solve(x+a,y+b,z+c)
+                    if(len(thetas) != 0):
+                        serial.write_line("found a candidate point!")
+                        for t in thetas:
+                            candidate_points.append([x+a, y+b, z+c])
                     thetas = inv_solve(x-a,y-b,z-c)
-    return thetas[0]        
+                    if(len(thetas) != 0):
+                        serial.write_line("found a candidate point!")
+                        for n in thetas:
+                            candidate_points.append([x-a,y-b,z-c])
+        return candidate_points
+    else:
+        serial.write_line("no need to find candidate points")
+        return result
+           
 
 def inv_solve(x, y, z):
     AP = Math.sqrt(x**2 + y**2)
@@ -127,15 +150,12 @@ def inv_solve(x, y, z):
     if(len(res) == 0):
         serial.write_line("no values work :(")
     else:
-        for _s in res:
-            serial.write_value("theta1", _s[0])
-            serial.write_value("theta2", _s[1])
-            serial.write_value("theta3", _s[2])
+        serial.write_line("there is a possible configuration!")
     
     return res;
 def convertToDegrees(theta):
     #checking for nan, nan is not equal to itself
-    if(theta != theta):
+    if(theta == theta):
         return Math.round(theta * (180/Math.PI))
     else:
         #print("Error: cannot perform operation with NaN value.")
