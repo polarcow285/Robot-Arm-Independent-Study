@@ -23,11 +23,12 @@ let can = []
 // x max: 23.5
 // y max: 23.5
 // z max: 19
-can = moveToPos(15, 15, 17)
+// can = findPoint(15, 15, 17)
 // can = moveToPos(23.5, 0, 19)
-for (let cand of can) {
-    serial.writeNumbers(cand)
-}
+// serial.write_numbers(can)
+findPoint(15, 15, 17)
+// for cand in can:
+// serial.write_numbers(cand)
 // serial.write_line("done")
 // thetas = inv_solve(15, 0, 12)
 // moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
@@ -62,9 +63,12 @@ function moveTo(target1: number, target2: number, target3: number) {
     }
 }
 
-function moveToPos(x: number, y: number, z: number): any[] {
+function findPoint(x: number, y: number, z: number) {
     let thetas: any[];
-    let candidate_points = []
+    let nearestPoint: number;
+    let x_candPoints = []
+    let y_candPoints = []
+    let z_candPoints = []
     let result = inv_solve(x, y, z)
     let tolerance = 10
     // serial.write_value(len)
@@ -77,28 +81,64 @@ function moveToPos(x: number, y: number, z: number): any[] {
                     thetas = inv_solve(x + a, y + b, z + c)
                     if (thetas.length != 0) {
                         serial.writeLine("found a candidate point!")
-                        for (let t of thetas) {
-                            candidate_points.push([x + a, y + b, z + c])
-                        }
+                        x_candPoints.push(x + a)
+                        y_candPoints.push(y + b)
+                        z_candPoints.push(z + c)
                     }
                     
-                    thetas = inv_solve(x - a, y - b, z - c)
-                    if (thetas.length != 0) {
-                        serial.writeLine("found a candidate point!")
-                        for (let n of thetas) {
-                            candidate_points.push([x - a, y - b, z - c])
-                        }
-                    }
+                    // thetas = inv_solve(x-a,y-b,z-c)
+                    /** 
+                    if(len(thetas) != 0):
+                        serial.write_line("found a candidate point!")
+                        for n in thetas:
+                            candidate_points.append([x-a,y-b,z-c])
                     
+ */
                 }
             }
         }
-        return candidate_points
-    } else {
-        serial.writeLine("no need to find candidate points")
-        return result
+        nearestPoint = find_nearest_points([x, y, z], x_candPoints, y_candPoints, z_candPoints)
     }
     
+    /** 
+    else:
+        serial.write_line("no need to find candidate points")
+        return result[0]
+    
+ */
+}
+
+function find_nearest_points(point: any, x_points: number[], y_points: any, z_points: any): number {
+    let nearest_point = null
+    let min_distance = 100
+    let xP = [0, 9, 8, 7]
+    serial.writeNumbers(x_points)
+    // serial.write_numbers(y_points)
+    // serial.write_numbers(z_points)
+    let count = 0
+    serial.writeNumber(count)
+    for (let a of x_points) {
+        serial.writeNumber(a)
+        serial.writeNumber(count)
+        serial.writeNumber(222222)
+        // serial.write_line("lsndfaksnfsadkjfans")
+        count += 1
+    }
+    // leng = len(xP)
+    // length = len(x_points)
+    // listC = cand_points[0]
+    // serial.write_number(listC[0])
+    for (let i = 0; i < 5; i++) {
+        // serial.write_numbers(p)
+        // distance = Math.sqrt((point[0]-p[0])**2 + (point[1]-p[1])**2 + (point[2]-p[2])**2)
+        /** 
+        if(distance < min_distance):
+            nearest_point = p
+            min_distance = distance
+        
+ */
+    }
+    return min_distance
 }
 
 function inv_solve(x: number, y: number, z: number): any[] {
@@ -114,19 +154,6 @@ function inv_solve(x: number, y: number, z: number): any[] {
     let theta1_1 = Math.atan2(y, x)
     let theta1_2 = theta1_1 + Math.PI
     // convert to degrees
-    /** 
-    theta1_1 = theta1_1 * (180/Math.PI)
-    theta1_2 = theta1_2 * (180/Math.PI)
-
-    theta3_1 = theta3_1 * (180/Math.PI)
-    theta3_2 = theta3_2 * (180/Math.PI)
-    
-    theta2_1 = theta2_1 * (180/Math.PI)
-    theta2_2 = theta2_2 * (180/Math.PI)
-    theta2_3 = theta2_3 * (180/Math.PI)
-    theta2_4 = theta2_4 * (180/Math.PI)
-    
- */
     theta1_1 = convertToDegrees(theta1_1)
     theta1_2 = convertToDegrees(theta1_2)
     theta2_1 = convertToDegrees(theta2_1)

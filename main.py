@@ -12,6 +12,7 @@ hummingbird.set_position_servo(FourPort.ONE, 0)
 hummingbird.set_position_servo(FourPort.TWO, 180)
 hummingbird.set_position_servo(FourPort.THREE, 0)
 
+
 def on_forever():
     
     moveTo(0, 0, 0)
@@ -25,10 +26,12 @@ can = []
 #x max: 23.5
 #y max: 23.5
 #z max: 19
-can = moveToPos(15, 15, 17)
+#can = findPoint(15, 15, 17)
 #can = moveToPos(23.5, 0, 19)
-for cand in can:
-    serial.write_numbers(cand)
+#serial.write_numbers(can)
+findPoint(15, 15, 17)
+#for cand in can:
+    #serial.write_numbers(cand)
 
 
 #serial.write_line("done")
@@ -57,9 +60,14 @@ def moveTo(target1, target2, target3):
         hummingbird.set_position_servo(FourPort.TWO, link2CurrPos)
         hummingbird.set_position_servo(FourPort.THREE, link3CurrPos)
         basic.pause(10)
-def moveToPos(x, y, z):
-    candidate_points = []
+
+def findPoint(x, y, z):
+    x_candPoints = []
+    y_candPoints = []
+    z_candPoints = []
+    
     result = inv_solve(x,y,z)
+    
     tolerance = 10
     #serial.write_value(len)
     if(len(result)==0):
@@ -71,18 +79,57 @@ def moveToPos(x, y, z):
                     thetas = inv_solve(x+a,y+b,z+c)
                     if(len(thetas) != 0):
                         serial.write_line("found a candidate point!")
-                        for t in thetas:
-                            candidate_points.append([x+a, y+b, z+c])
-                    thetas = inv_solve(x-a,y-b,z-c)
+                        x_candPoints.append(x+a)
+                        y_candPoints.append(y+b)
+                        z_candPoints.append(z+c)
+                    #thetas = inv_solve(x-a,y-b,z-c)
+                    """
                     if(len(thetas) != 0):
                         serial.write_line("found a candidate point!")
                         for n in thetas:
                             candidate_points.append([x-a,y-b,z-c])
-        return candidate_points
+                    """
+        nearestPoint = find_nearest_points([x,y,z], x_candPoints, y_candPoints, z_candPoints)
+    '''
     else:
         serial.write_line("no need to find candidate points")
-        return result
-           
+        return result[0]
+    '''
+def find_nearest_points(point, x_points, y_points, z_points):
+    nearest_point = None
+    min_distance = 100
+    xP = [0,9,8,7]
+    serial.write_numbers(x_points)
+    
+    #serial.write_numbers(y_points)
+    #serial.write_numbers(z_points)
+    count = 0
+    serial.write_number(count)
+   
+    
+    for a in x_points:
+        serial.write_number(a)
+        serial.write_number(count)
+        serial.write_number(222222)
+        #serial.write_line("lsndfaksnfsadkjfans")
+        count += 1
+       
+       
+    
+    #leng = len(xP)
+    #length = len(x_points)
+    #listC = cand_points[0]
+    #serial.write_number(listC[0])
+    for i in range(5):
+        #serial.write_numbers(p)
+        #distance = Math.sqrt((point[0]-p[0])**2 + (point[1]-p[1])**2 + (point[2]-p[2])**2)
+        """
+        if(distance < min_distance):
+            nearest_point = p
+            min_distance = distance
+        """
+    
+    return min_distance
 
 def inv_solve(x, y, z):
     AP = Math.sqrt(x**2 + y**2)
@@ -101,18 +148,7 @@ def inv_solve(x, y, z):
     theta1_2 = theta1_1 + Math.PI
 
     #convert to degrees
-    """
-    theta1_1 = theta1_1 * (180/Math.PI)
-    theta1_2 = theta1_2 * (180/Math.PI)
-
-    theta3_1 = theta3_1 * (180/Math.PI)
-    theta3_2 = theta3_2 * (180/Math.PI)
     
-    theta2_1 = theta2_1 * (180/Math.PI)
-    theta2_2 = theta2_2 * (180/Math.PI)
-    theta2_3 = theta2_3 * (180/Math.PI)
-    theta2_4 = theta2_4 * (180/Math.PI)
-    """
     theta1_1 = convertToDegrees(theta1_1)
     theta1_2 = convertToDegrees(theta1_2)
     
