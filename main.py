@@ -14,12 +14,18 @@ hummingbird.set_position_servo(FourPort.THREE, 0)
 
 
 def on_forever():
-    
+    print("Hellloooooo")
+    moveToXYZ(-23.5,0,19)
+    basic.pause(500)
+    moveToXYZ(13,12,24)
+    basic.pause(500)
+    """
     moveTo(0, 0, 0)
     basic.pause(1000)
     moveTo(90, 0, 90)
     basic.pause(1000)
-#basic.forever(on_forever)
+    """
+basic.forever(on_forever)
 #thetas = inv_solve(23.5, 0, 19)
 #thetas = inv_solve(21.5, 0, 19)
 can = []
@@ -29,7 +35,7 @@ can = []
 #can = findPoint(15, 15, 17)
 #can = moveToPos(23.5, 0, 19)
 #serial.write_numbers(can)
-findPoint(15, 15, 17)
+#findPoint(15, 15, 17)
 #for cand in can:
     #serial.write_numbers(cand)
 
@@ -37,8 +43,12 @@ findPoint(15, 15, 17)
 #serial.write_line("done")
 #thetas = inv_solve(15, 0, 12)
 #moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
-
-def moveTo(target1, target2, target3):
+def moveToXYZ(x: number, y: number, z: number):
+    print("herererer")
+    t = []
+    t = findPoint(x, y, z)
+    moveTo(t[0], t[1], t[2])
+def moveTo(target1: number, target2: number, target3: number):
     target2 = 180-target2
     global link1CurrPos
     global link2CurrPos
@@ -68,7 +78,7 @@ def findPoint(x, y, z):
     
     result = inv_solve(x,y,z)
     
-    tolerance = 10
+    tolerance = 5
     #serial.write_value(len)
     if(len(result)==0):
         serial.write_line("need to find candidate points")
@@ -82,54 +92,57 @@ def findPoint(x, y, z):
                         x_candPoints.append(x+a)
                         y_candPoints.append(y+b)
                         z_candPoints.append(z+c)
-                    #thetas = inv_solve(x-a,y-b,z-c)
-                    """
+                    thetas = inv_solve(x-a,y-b,z-c)
+                    
                     if(len(thetas) != 0):
                         serial.write_line("found a candidate point!")
-                        for n in thetas:
-                            candidate_points.append([x-a,y-b,z-c])
-                    """
+                        x_candPoints.append(x-a)
+                        y_candPoints.append(y-b)
+                        z_candPoints.append(z-c)
+                    
+        #for i in range(len(x_candPoints)):
+            #distance = distance = Math.sqrt((x-x_candPoints[i])**2 + (y-y_candPoints[i])**2 + (z-z_candPoints[i]**2)
         nearestPoint = find_nearest_points([x,y,z], x_candPoints, y_candPoints, z_candPoints)
-    '''
+        print("nearest point!")
+        print(nearestPoint)
+        #do inverse kinematics on that point
+        thetas = inv_solve(nearestPoint[0],nearestPoint[1],nearestPoint[2])
+        return thetas[0]
+    
     else:
         serial.write_line("no need to find candidate points")
         return result[0]
-    '''
-def find_nearest_points(point, x_points, y_points, z_points):
+    
+def find_nearest_points(point: List[number], x_points: List[number], y_points: List[number], z_points: List[number]):
     nearest_point = None
     min_distance = 100
     xP = [0,9,8,7]
     serial.write_numbers(x_points)
-    
+    length = len(x_points)
+    serial.write_line("lsndfaksnfsadkjfans")
+    #print(type(length))
     #serial.write_numbers(y_points)
     #serial.write_numbers(z_points)
     count = 0
     serial.write_number(count)
    
     
-    for a in x_points:
-        serial.write_number(a)
-        serial.write_number(count)
-        serial.write_number(222222)
-        #serial.write_line("lsndfaksnfsadkjfans")
-        count += 1
-       
+    for i in range (length):
+        
+        distance = Math.sqrt((point[0]-x_points[i])**2 + (point[1]-y_points[i])**2 + (point[2]-z_points[i])**2)
+        if(distance < min_distance):
+            nearest_point = [x_points[i], y_points[i], z_points[i]]
+            min_distance = distance
+        
+    return nearest_point
        
     
     #leng = len(xP)
     #length = len(x_points)
     #listC = cand_points[0]
     #serial.write_number(listC[0])
-    for i in range(5):
-        #serial.write_numbers(p)
-        #distance = Math.sqrt((point[0]-p[0])**2 + (point[1]-p[1])**2 + (point[2]-p[2])**2)
-        """
-        if(distance < min_distance):
-            nearest_point = p
-            min_distance = distance
-        """
     
-    return min_distance
+    
 
 def inv_solve(x, y, z):
     AP = Math.sqrt(x**2 + y**2)

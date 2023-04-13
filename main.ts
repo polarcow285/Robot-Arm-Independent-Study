@@ -9,14 +9,20 @@ hummingbird.startHummingbird()
 hummingbird.setPositionServo(FourPort.One, 0)
 hummingbird.setPositionServo(FourPort.Two, 180)
 hummingbird.setPositionServo(FourPort.Three, 0)
-function on_forever() {
+basic.forever(function on_forever() {
+    console.log("Hellloooooo")
+    moveToXYZ(-23.5, 0, 19)
+    basic.pause(500)
+    moveToXYZ(13, 12, 24)
+    basic.pause(500)
+    /** 
     moveTo(0, 0, 0)
     basic.pause(1000)
     moveTo(90, 0, 90)
     basic.pause(1000)
-}
-
-// basic.forever(on_forever)
+    
+ */
+})
 // thetas = inv_solve(23.5, 0, 19)
 // thetas = inv_solve(21.5, 0, 19)
 let can = []
@@ -26,12 +32,19 @@ let can = []
 // can = findPoint(15, 15, 17)
 // can = moveToPos(23.5, 0, 19)
 // serial.write_numbers(can)
-findPoint(15, 15, 17)
+// findPoint(15, 15, 17)
 // for cand in can:
 // serial.write_numbers(cand)
 // serial.write_line("done")
 // thetas = inv_solve(15, 0, 12)
 // moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
+function moveToXYZ(x: number, y: number, z: number) {
+    console.log("herererer")
+    let t = []
+    t = findPoint(x, y, z)
+    moveTo(t[0], t[1], t[2])
+}
+
 function moveTo(target1: number, target2: number, target3: number) {
     target2 = 180 - target2
     
@@ -63,14 +76,14 @@ function moveTo(target1: number, target2: number, target3: number) {
     }
 }
 
-function findPoint(x: number, y: number, z: number) {
-    let thetas: any[];
-    let nearestPoint: number;
+function findPoint(x: number, y: number, z: number): number[] {
+    let thetas: number[][];
+    let nearestPoint: number[];
     let x_candPoints = []
     let y_candPoints = []
     let z_candPoints = []
     let result = inv_solve(x, y, z)
-    let tolerance = 10
+    let tolerance = 5
     // serial.write_value(len)
     if (result.length == 0) {
         serial.writeLine("need to find candidate points")
@@ -86,62 +99,61 @@ function findPoint(x: number, y: number, z: number) {
                         z_candPoints.push(z + c)
                     }
                     
-                    // thetas = inv_solve(x-a,y-b,z-c)
-                    /** 
-                    if(len(thetas) != 0):
-                        serial.write_line("found a candidate point!")
-                        for n in thetas:
-                            candidate_points.append([x-a,y-b,z-c])
+                    thetas = inv_solve(x - a, y - b, z - c)
+                    if (thetas.length != 0) {
+                        serial.writeLine("found a candidate point!")
+                        x_candPoints.push(x - a)
+                        y_candPoints.push(y - b)
+                        z_candPoints.push(z - c)
+                    }
                     
- */
                 }
             }
         }
+        // for i in range(len(x_candPoints)):
+        // distance = distance = Math.sqrt((x-x_candPoints[i])**2 + (y-y_candPoints[i])**2 + (z-z_candPoints[i]**2)
         nearestPoint = find_nearest_points([x, y, z], x_candPoints, y_candPoints, z_candPoints)
+        console.log("nearest point!")
+        console.log(nearestPoint)
+        // do inverse kinematics on that point
+        thetas = inv_solve(nearestPoint[0], nearestPoint[1], nearestPoint[2])
+        return thetas[0]
+    } else {
+        serial.writeLine("no need to find candidate points")
+        return result[0]
     }
     
-    /** 
-    else:
-        serial.write_line("no need to find candidate points")
-        return result[0]
-    
- */
 }
 
-function find_nearest_points(point: any, x_points: number[], y_points: any, z_points: any): number {
+function find_nearest_points(point: number[], x_points: number[], y_points: number[], z_points: number[]): number[] {
+    let distance: number;
     let nearest_point = null
     let min_distance = 100
     let xP = [0, 9, 8, 7]
     serial.writeNumbers(x_points)
+    let length = x_points.length
+    serial.writeLine("lsndfaksnfsadkjfans")
+    // print(type(length))
     // serial.write_numbers(y_points)
     // serial.write_numbers(z_points)
     let count = 0
     serial.writeNumber(count)
-    for (let a of x_points) {
-        serial.writeNumber(a)
-        serial.writeNumber(count)
-        serial.writeNumber(222222)
-        // serial.write_line("lsndfaksnfsadkjfans")
-        count += 1
-    }
-    // leng = len(xP)
-    // length = len(x_points)
-    // listC = cand_points[0]
-    // serial.write_number(listC[0])
-    for (let i = 0; i < 5; i++) {
-        // serial.write_numbers(p)
-        // distance = Math.sqrt((point[0]-p[0])**2 + (point[1]-p[1])**2 + (point[2]-p[2])**2)
-        /** 
-        if(distance < min_distance):
-            nearest_point = p
+    for (let i = 0; i < length; i++) {
+        distance = Math.sqrt((point[0] - x_points[i]) ** 2 + (point[1] - y_points[i]) ** 2 + (point[2] - z_points[i]) ** 2)
+        if (distance < min_distance) {
+            nearest_point = [x_points[i], y_points[i], z_points[i]]
             min_distance = distance
+        }
         
- */
     }
-    return min_distance
+    return nearest_point
 }
 
-function inv_solve(x: number, y: number, z: number): any[] {
+// leng = len(xP)
+// length = len(x_points)
+// listC = cand_points[0]
+// serial.write_number(listC[0])
+function inv_solve(x: number, y: number, z: number): number[][] {
     let isValid: boolean;
     let AP = Math.sqrt(x ** 2 + y ** 2)
     let s = z - link1
