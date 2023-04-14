@@ -15,17 +15,21 @@ hummingbird.set_position_servo(FourPort.THREE, 0)
 
 def on_forever():
     print("Hellloooooo")
-    moveToXYZ(-23.5,0,19)
+    #circle6()
+    #basic.pause(50)
+    
+    #moveToXYZ(-23.5,0,19)
+    #basic.pause(500)
+    moveToXYZ(-10,0,39)
     basic.pause(500)
-    moveToXYZ(13,12,24)
-    basic.pause(500)
-    """
-    moveTo(0, 0, 0)
-    basic.pause(1000)
-    moveTo(90, 0, 90)
-    basic.pause(1000)
-    """
-#basic.forever(on_forever)
+    
+    
+    #moveTo(0, 0, 0)
+    #basic.pause(1000)
+    #moveTo(180, 0, 0)
+    #basic.pause(1000)
+    
+basic.forever(on_forever)
 #thetas = inv_solve(23.5, 0, 19)
 #thetas = inv_solve(21.5, 0, 19)
 
@@ -36,26 +40,26 @@ def on_forever():
 #can = moveToPos(23.5, 0, 19)
 
 #findPoint(15, 15, 17)
-circle6()
+#circle6()
 
 
 #serial.write_line("done")
 #thetas = inv_solve(15, 0, 12)
 #moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
 def circle6():
-    resolution = [0,90,360]
+    resolution = [0, 90, 180,270]
     for i in range(len(resolution)):
         resolution[i] = resolution[i] * (Math.PI/180)
         serial.write_value("res", resolution[i])
     radius = 2
-    h = 13
-    k = 23
+    h = -13
+    k = 28
 
     for t in resolution:
         serial.write_number(t)
        
         x = Math.round(h + (radius * Math.cos(t)))
-        y = 12
+        y = -12
         z = Math.round(k + (radius * -Math.sin(t)))
         moveToXYZ(x,y,z)
         basic.pause(200)

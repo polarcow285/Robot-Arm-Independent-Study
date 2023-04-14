@@ -9,22 +9,19 @@ hummingbird.startHummingbird()
 hummingbird.setPositionServo(FourPort.One, 0)
 hummingbird.setPositionServo(FourPort.Two, 180)
 hummingbird.setPositionServo(FourPort.Three, 0)
-function on_forever() {
+// moveTo(0, 0, 0)
+// basic.pause(1000)
+// moveTo(180, 0, 0)
+// basic.pause(1000)
+basic.forever(function on_forever() {
     console.log("Hellloooooo")
-    moveToXYZ(-23.5, 0, 19)
+    // circle6()
+    // basic.pause(50)
+    // moveToXYZ(-23.5,0,19)
+    // basic.pause(500)
+    moveToXYZ(-10, 0, 39)
     basic.pause(500)
-    moveToXYZ(13, 12, 24)
-    basic.pause(500)
-    /** 
-    moveTo(0, 0, 0)
-    basic.pause(1000)
-    moveTo(90, 0, 90)
-    basic.pause(1000)
-    
- */
-}
-
-// basic.forever(on_forever)
+})
 // thetas = inv_solve(23.5, 0, 19)
 // thetas = inv_solve(21.5, 0, 19)
 // x max: 23.5
@@ -33,7 +30,7 @@ function on_forever() {
 // can = findPoint(15, 15, 17)
 // can = moveToPos(23.5, 0, 19)
 // findPoint(15, 15, 17)
-circle6()
+// circle6()
 // serial.write_line("done")
 // thetas = inv_solve(15, 0, 12)
 // moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
@@ -41,18 +38,18 @@ function circle6() {
     let x: number;
     let y: number;
     let z: number;
-    let resolution = [0, 90, 360]
+    let resolution = [0, 90, 180, 270]
     for (let i = 0; i < resolution.length; i++) {
         resolution[i] = resolution[i] * (Math.PI / 180)
         serial.writeValue("res", resolution[i])
     }
     let radius = 2
-    let h = 13
-    let k = 23
+    let h = -13
+    let k = 28
     for (let t of resolution) {
         serial.writeNumber(t)
         x = Math.round(h + radius * Math.cos(t))
-        y = 12
+        y = -12
         z = Math.round(k + radius * -Math.sin(t))
         moveToXYZ(x, y, z)
         basic.pause(200)
