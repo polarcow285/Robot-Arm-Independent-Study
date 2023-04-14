@@ -9,7 +9,7 @@ hummingbird.startHummingbird()
 hummingbird.setPositionServo(FourPort.One, 0)
 hummingbird.setPositionServo(FourPort.Two, 180)
 hummingbird.setPositionServo(FourPort.Three, 0)
-basic.forever(function on_forever() {
+function on_forever() {
     console.log("Hellloooooo")
     moveToXYZ(-23.5, 0, 19)
     basic.pause(500)
@@ -22,24 +22,47 @@ basic.forever(function on_forever() {
     basic.pause(1000)
     
  */
-})
+}
+
+// basic.forever(on_forever)
 // thetas = inv_solve(23.5, 0, 19)
 // thetas = inv_solve(21.5, 0, 19)
-let can = []
 // x max: 23.5
 // y max: 23.5
 // z max: 19
 // can = findPoint(15, 15, 17)
 // can = moveToPos(23.5, 0, 19)
-// serial.write_numbers(can)
 // findPoint(15, 15, 17)
-// for cand in can:
-// serial.write_numbers(cand)
+circle6()
 // serial.write_line("done")
 // thetas = inv_solve(15, 0, 12)
 // moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
+function circle6() {
+    let x: number;
+    let y: number;
+    let z: number;
+    let resolution = [0, 90, 360]
+    for (let i = 0; i < resolution.length; i++) {
+        resolution[i] = resolution[i] * (Math.PI / 180)
+        serial.writeValue("res", resolution[i])
+    }
+    let radius = 2
+    let h = 13
+    let k = 23
+    for (let t of resolution) {
+        serial.writeNumber(t)
+        x = Math.round(h + radius * Math.cos(t))
+        y = 12
+        z = Math.round(k + radius * -Math.sin(t))
+        moveToXYZ(x, y, z)
+        basic.pause(200)
+    }
+    // xyz (0, 23.5, 19)
+    console.log("done")
+}
+
 function moveToXYZ(x: number, y: number, z: number) {
-    console.log("herererer")
+    console.log("doing moveToXYZ")
     let t = []
     t = findPoint(x, y, z)
     moveTo(t[0], t[1], t[2])
@@ -84,13 +107,13 @@ function findPoint(x: number, y: number, z: number): number[] {
     let z_candPoints = []
     let result = inv_solve(x, y, z)
     let tolerance = 5
-    // serial.write_value(len)
+    // if no possible configuration of thetas for xyz point,
+    // then find the nearest point
     if (result.length == 0) {
         serial.writeLine("need to find candidate points")
         for (let a = 0; a < tolerance; a++) {
             for (let b = 0; b < tolerance; b++) {
                 for (let c = 0; c < tolerance; c++) {
-                    serial.writeLine("doing inv_solve for candidates")
                     thetas = inv_solve(x + a, y + b, z + c)
                     if (thetas.length != 0) {
                         serial.writeLine("found a candidate point!")
@@ -117,8 +140,13 @@ function findPoint(x: number, y: number, z: number): number[] {
         console.log(nearestPoint)
         // do inverse kinematics on that point
         thetas = inv_solve(nearestPoint[0], nearestPoint[1], nearestPoint[2])
+        if (thetas.length == 0) {
+            console.log("theres no hope for this point, its null")
+        }
+        
         return thetas[0]
     } else {
+        // if thetas exist, no need to find candidate points
         serial.writeLine("no need to find candidate points")
         return result[0]
     }
@@ -133,11 +161,11 @@ function find_nearest_points(point: number[], x_points: number[], y_points: numb
     serial.writeNumbers(x_points)
     let length = x_points.length
     serial.writeLine("lsndfaksnfsadkjfans")
-    // print(type(length))
     // serial.write_numbers(y_points)
     // serial.write_numbers(z_points)
     let count = 0
     serial.writeNumber(count)
+    // calculates distance, finds nearest point
     for (let i = 0; i < length; i++) {
         distance = Math.sqrt((point[0] - x_points[i]) ** 2 + (point[1] - y_points[i]) ** 2 + (point[2] - z_points[i]) ** 2)
         if (distance < min_distance) {
@@ -180,13 +208,6 @@ function inv_solve(x: number, y: number, z: number): number[][] {
     let set4 = [theta1_2, theta2_4, theta3_2]
     let p = [set1, set2, set3, set4]
     let res = []
-    /** 
-    for _set in p:
-        serial.write_value("theta1", _set[0])
-        serial.write_value("theta2", _set[1])
-        serial.write_value("theta3", _set[2])
-    
- */
     for (let _set of p) {
         isValid = true
         for (let theta of _set) {
@@ -202,8 +223,9 @@ function inv_solve(x: number, y: number, z: number): number[][] {
         
     }
     if (res.length == 0) {
-        serial.writeLine("no values work :(")
+        
     } else {
+        // serial.write_line("no values work :(")
         serial.writeLine("there is a possible configuration!")
     }
     

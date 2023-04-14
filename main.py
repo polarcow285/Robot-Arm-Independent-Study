@@ -25,26 +25,46 @@ def on_forever():
     moveTo(90, 0, 90)
     basic.pause(1000)
     """
-basic.forever(on_forever)
+#basic.forever(on_forever)
 #thetas = inv_solve(23.5, 0, 19)
 #thetas = inv_solve(21.5, 0, 19)
-can = []
+
 #x max: 23.5
 #y max: 23.5
 #z max: 19
 #can = findPoint(15, 15, 17)
 #can = moveToPos(23.5, 0, 19)
-#serial.write_numbers(can)
+
 #findPoint(15, 15, 17)
-#for cand in can:
-    #serial.write_numbers(cand)
+circle6()
 
 
 #serial.write_line("done")
 #thetas = inv_solve(15, 0, 12)
 #moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
+def circle6():
+    resolution = [0,90,360]
+    for i in range(len(resolution)):
+        resolution[i] = resolution[i] * (Math.PI/180)
+        serial.write_value("res", resolution[i])
+    radius = 2
+    h = 13
+    k = 23
+
+    for t in resolution:
+        serial.write_number(t)
+       
+        x = Math.round(h + (radius * Math.cos(t)))
+        y = 12
+        z = Math.round(k + (radius * -Math.sin(t)))
+        moveToXYZ(x,y,z)
+        basic.pause(200)
+    #xyz (0, 23.5, 19)
+    
+    print("done")
+    
 def moveToXYZ(x: number, y: number, z: number):
-    print("herererer")
+    print("doing moveToXYZ")
     t = []
     t = findPoint(x, y, z)
     moveTo(t[0], t[1], t[2])
@@ -79,13 +99,13 @@ def findPoint(x, y, z):
     result = inv_solve(x,y,z)
     
     tolerance = 5
-    #serial.write_value(len)
+    #if no possible configuration of thetas for xyz point,
+    #then find the nearest point
     if(len(result)==0):
         serial.write_line("need to find candidate points")
         for a in range(tolerance):
             for b in range(tolerance):
                 for c in range(tolerance):
-                    serial.write_line("doing inv_solve for candidates")
                     thetas = inv_solve(x+a,y+b,z+c)
                     if(len(thetas) != 0):
                         serial.write_line("found a candidate point!")
@@ -107,8 +127,10 @@ def findPoint(x, y, z):
         print(nearestPoint)
         #do inverse kinematics on that point
         thetas = inv_solve(nearestPoint[0],nearestPoint[1],nearestPoint[2])
+        if(len(thetas) == 0):
+            print("theres no hope for this point, its null")
         return thetas[0]
-    
+    #if thetas exist, no need to find candidate points
     else:
         serial.write_line("no need to find candidate points")
         return result[0]
@@ -120,13 +142,12 @@ def find_nearest_points(point: List[number], x_points: List[number], y_points: L
     serial.write_numbers(x_points)
     length = len(x_points)
     serial.write_line("lsndfaksnfsadkjfans")
-    #print(type(length))
     #serial.write_numbers(y_points)
     #serial.write_numbers(z_points)
     count = 0
     serial.write_number(count)
    
-    
+    #calculates distance, finds nearest point
     for i in range (length):
         
         distance = Math.sqrt((point[0]-x_points[i])**2 + (point[1]-y_points[i])**2 + (point[2]-z_points[i])**2)
@@ -181,13 +202,6 @@ def inv_solve(x, y, z):
     p = [set1, set2, set3, set4]
     res = []
     
-    """
-    for _set in p:
-        serial.write_value("theta1", _set[0])
-        serial.write_value("theta2", _set[1])
-        serial.write_value("theta3", _set[2])
-    """
-    
     for _set in p:       
         isValid = True;
         for theta in _set:          
@@ -197,7 +211,8 @@ def inv_solve(x, y, z):
         if(isValid == True):
             res.append(_set)
     if(len(res) == 0):
-        serial.write_line("no values work :(")
+        pass
+        #serial.write_line("no values work :(")
     else:
         serial.write_line("there is a possible configuration!")
     
