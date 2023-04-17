@@ -15,15 +15,29 @@ hummingbird.set_position_servo(FourPort.THREE, 0)
 
 def on_forever():
     print("Hellloooooo")
-    #circle6()
-    #basic.pause(50)
-    
-    #moveToXYZ(-23.5,0,19)
-    #basic.pause(500)
+    circle6()
+    basic.pause(500)
+    extend()
+    basic.pause(500)
+    """
+    moveToXYZ(-23.5,0,19)
+    basic.pause(500)
     moveToXYZ(-10,0,39)
     basic.pause(500)
-    
-    
+    moveToXYZ(-15, 0, 32.5)
+    basic.pause(500)
+    moveToXYZ(15, 0, 28)
+    basic.pause(500)
+    moveToXYZ(13, 13, 30)
+    basic.pause(500)
+    """
+    #moveToXYZ(15,15,21) #needs candidate points
+    """
+    moveToXYZ(-13, -12, 28)
+    basic.pause(500)
+    moveToXYZ(-18, -18, 19)
+    basic.pause(500)
+    """
     #moveTo(0, 0, 0)
     #basic.pause(1000)
     #moveTo(180, 0, 0)
@@ -46,6 +60,12 @@ basic.forever(on_forever)
 #serial.write_line("done")
 #thetas = inv_solve(15, 0, 12)
 #moveTo(thetas[0][0], thetas[0][1], thetas[0][2])
+def extend():
+    moveToXYZ(-13, -12, 28)
+    basic.pause(500)
+    moveToXYZ(-18, -18, 19)
+    basic.pause(500)
+
 def circle6():
     resolution = [0, 90, 180,270]
     for i in range(len(resolution)):
