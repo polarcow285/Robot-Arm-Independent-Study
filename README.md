@@ -1,5 +1,13 @@
+# Robot Arm Indepedent Study
+Source code for my independent study project at Flintridge Preparatory School where I built and programmed a three degree-of-freedom scaled robotic arm that models the movements of a fencer’s arm.
 
-> Open this page at [https://polarcow285.github.io/robotarmindependentstudyv2/](https://polarcow285.github.io/robotarmindependentstudyv2/)
+## **Introduction**
+*Shing!* My fencing sword slid along the dummy’s blade. It was great to practice against a stationary fencing dummy. However, I thought to myself, “it would be so much more helpful if it could move!” Thus, my “fencing robot” idea was born. This fencing robot would be an interactive dummy to help fencers train by themselves.
+Fencers move their arms in different directions to parry (defend) and attack. For this independent study, I was interested in modeling a fencer’s arm using robotics. I hope to gain a deeper understanding of robotics in order to build and program the movements of a fencer’s arm. 
+
+## **Description & Main Features**
+I used components from the HummingBird Technologies Kit with laser-cut parts for this robot arm.
+
 
 ## Use as Extension
 
