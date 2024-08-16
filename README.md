@@ -5,35 +5,22 @@ Source code for my independent study project at Flintridge Preparatory School wh
 *Shing!* My fencing sword slid along the dummy’s blade. It was great to practice against a stationary fencing dummy. However, I thought to myself, “it would be so much more helpful if it could move!” Thus, my “fencing robot” idea was born. This fencing robot would be an interactive dummy to help fencers train by themselves.
 Fencers move their arms in different directions to parry (defend) and attack. For this independent study, I was interested in modeling a fencer’s arm using robotics. I hope to gain a deeper understanding of robotics in order to build and program the movements of a fencer’s arm. 
 
-## **Description & Main Features**
-I used components from the HummingBird Technologies Kit with laser-cut parts for this robot arm.
+## **Overall Design Process & Main Features**
+I used components from the HummingBird Technologies Kit with laser-cut parts to construct the robot arm. I coded the movements in Python on MakeCode, an online coding platform by Microsoft that was compatible with my mechanical components. This project culiminated in a presentation to ~25 students, faculty, and parents about the design process and a live demonstration of the robotic arm.
 
+To build the arm, I laser-cut three links and used mechanical tools including the laser cutter, drill, and caliper to attach them to servos. Through this process, I learned the importance of careful planning since I frequently had to reattach many components.
 
-## Use as Extension
+In the coding process, I had to create separate "move" functions that performed interpolation so the arm could move in a smoother fashion.
 
-This repository can be added as an **extension** in MakeCode.
+To mimic a fencer's arm, I implemented inverse kinematics to generate trajectories for robot arm in Python. Inverse kinematics is the process of calculating the joint angles given the end effector's position, and I used a geometric method to calcualte this. I was able to test my code by measuring the robot's coordinates in real life using measuring sticks. Then, I coded and optimized an algorithm that determines the
+closest coordinate the robot arm should reach when given an unreachable one, which improved the arm’s precision and reducing errors.
 
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for **https://github.com/polarcow285/robotarmindependentstudyv2** and import
+Using inverse kinematics along with parametric equations, my robot arm can perform a circle motion, resembling the move 'circle parry 6' in fencing, along with an extension.
 
-## Edit this project ![Build status badge](https://github.com/polarcow285/robotarmindependentstudyv2/workflows/MakeCode/badge.svg)
+At the end of the semester, I presented the design process and held a live demonstration to a group of faculty, students, and parents, which you can watch here.
 
-To edit this repository in MakeCode.
+## **Authors and Acknowledgment**
 
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **Import** then click on **Import URL**
-* paste **https://github.com/polarcow285/robotarmindependentstudyv2** and click import
+Robot Arm Independent Study was created by **[Natalie Leung](https://github.com/polarcow)**.
 
-## Blocks preview
-
-This image shows the blocks code from the last commit in master.
-This image may take a few minutes to refresh.
-
-![A rendered view of the blocks](https://github.com/polarcow285/robotarmindependentstudyv2/raw/master/.github/makecode/blocks.png)
-
-#### Metadata (used for search, rendering)
-
-* for PXT/microbit
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
+I would like to thank my adviser Mrs. Goodwin for 
