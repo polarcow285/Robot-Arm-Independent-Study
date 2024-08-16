@@ -17,7 +17,7 @@ closest coordinate the robot arm should reach when given an unreachable one, whi
 
 Using inverse kinematics along with parametric equations, my robot arm can perform a circle motion, resembling the move 'circle parry 6' in fencing, along with an extension.
 
-At the end of the semester, I presented the design process and held a live demonstration to a group of faculty, students, and parents, which you can watch here.
+At the end of the semester, I presented the design process and held a live demonstration to a group of faculty, students, and parents, which you can watch [here](https://youtu.be/ujZPBW6D7Yo).
 
 ## **Authors and Acknowledgment**
 
