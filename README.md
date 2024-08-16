@@ -23,4 +23,4 @@ At the end of the semester, I presented the design process and held a live demon
 
 Robot Arm Independent Study was created by **[Natalie Leung](https://github.com/polarcow)**.
 
-I would like to thank my adviser Mrs. Goodwin for 
+Thank you to my adviser Mrs. Goodwin! 
