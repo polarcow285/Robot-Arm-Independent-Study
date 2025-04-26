@@ -12,7 +12,7 @@ To build the arm, I laser-cut three links and used mechanical tools including th
 
 In the coding process, I had to create separate "move" functions that performed interpolation so the arm could move in a smoother fashion.
 
-To mimic a fencer's arm, I implemented inverse kinematics to generate trajectories for robot arm in Python. Inverse kinematics is the process of calculating the joint angles given the end effector's position, and I used a geometric method to calcualte this. I was able to test my code by measuring the robot's coordinates in real life using measuring sticks. Then, I coded and optimized an algorithm that determines the
+To mimic a fencer's arm, I implemented inverse kinematics to generate trajectories for robot arm in Python. Inverse kinematics is the process of calculating the joint angles given the end effector's position, and I used a geometric method to calculate this. I was able to test my code by measuring the robot's coordinates in real life using measuring sticks. Then, I coded and optimized an algorithm that determines the
 closest coordinate the robot arm should reach when given an unreachable one, which improved the arm’s precision and reducing errors.
 
 Using inverse kinematics along with parametric equations, my robot arm can perform a circle motion, resembling the move 'circle parry 6' in fencing, along with an extension.
